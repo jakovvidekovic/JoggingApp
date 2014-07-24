@@ -45,6 +45,7 @@ public class LocationIntentService extends IntentService {
                 preferences = getSharedPreferences(Const.SHARED_PREFS_KEY, MODE_PRIVATE);
                 saveLocation(loc);
                 showNotification();
+
             }
         }
     }
@@ -96,6 +97,8 @@ public class LocationIntentService extends IntentService {
         NotificationManager mNotificationManager =
                 (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(Const.NOTIFICATION_ID, builder.build());
+
+
     }
 
 

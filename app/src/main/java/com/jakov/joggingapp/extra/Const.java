@@ -16,7 +16,7 @@ public final class Const {
     public static final String PREFS_STARTED="com.jakov.joggingapp.started_tracking";
     public static final String PREFS_CURRENT_RUN="com.jakov.joggingapp.current_tracking_run";
 
-    public static final long UPDATE_INTERVAL=1000*10;
+    public static final long UPDATE_INTERVAL=1000*9;
     public static final long FAST_UPDATE_INTERVAL=1000*7;
 
     public static final int NOTIFICATION_ID=5478;
