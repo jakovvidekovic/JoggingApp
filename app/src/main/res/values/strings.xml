@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="parse_app_id">DSYsRpWfvLrJM5ZnaGOrDEhMLWgIFQlZPFUDjUJu</string>
+    <string name="parse_client_key">0tfPXMzsnpCNShLbRKEdHHFsSDGMXV7oVHjUFDvO</string>
+    <string name="facebook_app_id">817845561573756</string>
+    <string name="twitter_consumer_key">YOUR_TWITTER_CONSUMER_KEY</string>
+    <string name="twitter_consumer_secret">YOUR_TWITTER_CONSUMER_SECRET</string>
+    <string name="app_name">Jogging App</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_logout">Log Out</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_add_entry">AddEntryActivity</string>
+    <string name="title_activity_tracking">TrackingActivity</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
