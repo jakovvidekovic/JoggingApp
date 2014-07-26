@@ -62,7 +62,6 @@ public class TrackingActivity extends ActionBarActivity implements GooglePlaySer
     protected void onResume() {
         super.onResume();
         if (preferences != null) {
-            Log.e("service","onresume");
             started = preferences.getBoolean(Const.PREFS_STARTED, false);
             started(started);
         }
@@ -164,6 +163,7 @@ public class TrackingActivity extends ActionBarActivity implements GooglePlaySer
                                 updateNotification(distance,Const.sdfTime.format(time));
                                 run.setTime(time);
                                 run.setDistance(distance);
+                                run.setUpdatedAt(new Date());
                                 run.pinInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
@@ -205,6 +205,7 @@ public class TrackingActivity extends ActionBarActivity implements GooglePlaySer
         run.setDate(new Date());
         run.setUpdatedAt(new Date());
         run.setDistance(0);
+        run.setHasCoordinates(true);
         run.setUser(ParseUser.getCurrentUser());
         run.saveInBackground(new SaveCallback() {
             @Override

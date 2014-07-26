@@ -34,12 +34,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
+
 
 public class JoggingFragment extends Fragment implements View.OnClickListener {
 
     Button btnAddEntry, btnStartTracking;
     ImageButton btnDateFrom, btnDateTo;
-    TextView tvDateTo,tvDateFrom;
+    TextView tvDateTo, tvDateFrom;
 
     ListView listViewEntry;
 
@@ -60,8 +63,8 @@ public class JoggingFragment extends Fragment implements View.OnClickListener {
         btnStartTracking = (Button) v.findViewById(R.id.btnStartTracking);
         btnDateFrom = (ImageButton) v.findViewById(R.id.btnDateFrom);
         btnDateTo = (ImageButton) v.findViewById(R.id.btnDateTo);
-        tvDateFrom=(TextView)v.findViewById(R.id.tvDateFrom);
-        tvDateTo=(TextView)v.findViewById(R.id.tvDateTo);
+        tvDateFrom = (TextView) v.findViewById(R.id.tvDateFrom);
+        tvDateTo = (TextView) v.findViewById(R.id.tvDateTo);
 
         btnAddEntry.setOnClickListener(this);
         btnStartTracking.setOnClickListener(this);
@@ -82,6 +85,7 @@ public class JoggingFragment extends Fragment implements View.OnClickListener {
         final ParseQuery<Run> query = new ParseQuery<Run>(Run.class);
         query.fromLocalDatastore();
         query.whereNotEqualTo(Run.C_DELETED, true);
+        query.addDescendingOrder(Run.C_DATE);
         query.findInBackground(new FindCallback<Run>() {
             @Override
             public void done(List<Run> runs, ParseException e) {
@@ -116,7 +120,7 @@ public class JoggingFragment extends Fragment implements View.OnClickListener {
     }
 
     private void startTrackingActivity() {
-        Intent i= new Intent(getActivity(), TrackingActivity.class);
+        Intent i = new Intent(getActivity(), TrackingActivity.class);
         startActivity(i);
     }
 
@@ -141,11 +145,11 @@ public class JoggingFragment extends Fragment implements View.OnClickListener {
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 if (id == R.id.btnDateFrom) {
                     dateFrom = cal.getTime();
-                    tvDateFrom.setText("FROM:\n"+ Const.sdfDate.format(dateFrom));
+                    tvDateFrom.setText("FROM:\n" + Const.sdfDate.format(dateFrom));
                 }
                 if (id == R.id.btnDateTo) {
                     dateTo = cal.getTime();
-                    tvDateTo.setText("TO:\n"+Const.sdfDate.format(dateTo));
+                    tvDateTo.setText("TO:\n" + Const.sdfDate.format(dateTo));
                 }
                 filterResults();
             }
@@ -156,16 +160,18 @@ public class JoggingFragment extends Fragment implements View.OnClickListener {
     private void filterResults() {
         List<Run> list = new ArrayList<Run>(mRuns);
         if (dateFrom != null) {
-            for (int i=0;i<list.size();i++) {
+            for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).getDate().before(dateFrom)) {
                     list.remove(i);
+                    i--;
                 }
             }
         }
         if (dateTo != null) {
-            for (int i=0;i<list.size();i++) {
+            for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).getDate().after(dateTo)) {
                     list.remove(i);
+                    i--;
                 }
             }
         }
@@ -264,8 +270,8 @@ public class JoggingFragment extends Fragment implements View.OnClickListener {
             final Run run = list.get(position);
             holder.date.setText("Date: " + Const.sdfDate.format(run.getDate()));
             holder.time.setText("Time: " + Const.sdfTime.format(run.getTime()) + " h");
-            holder.distance.setText("Distance: " + run.getDistance() + " km");
-            double avSpeed = Const.getAverageSpeed(run.getDistance(),run.getTime());
+            holder.distance.setText("Distance: " + String.format(Locale.getDefault(), "%1$.2f", run.getDistance()) + " km");
+            double avSpeed = Const.getAverageSpeed(run.getDistance(), run.getTime());
             holder.speed.setText("Av. Speed: " + String.format(Locale.getDefault(), "%1$.2f", avSpeed) + " km/h");
 
             holder.edit.setOnClickListener(new View.OnClickListener() {
@@ -288,6 +294,7 @@ public class JoggingFragment extends Fragment implements View.OnClickListener {
                         @Override
                         public void done(ParseException e) {
                             if (e == null) {
+                                Crouton.makeText(getActivity(),"Deleted", Style.INFO).show();
                             }
                         }
                     });
@@ -295,14 +302,30 @@ public class JoggingFragment extends Fragment implements View.OnClickListener {
                     notifyDataSetChanged();
                 }
             });
+            if (run.hasCoordinates()) {
+                holder.edit.setVisibility(View.GONE);
+                holder.map.setVisibility(View.VISIBLE);
+                holder.map.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(getActivity(), DisplayRunActivity.class);
+                        i.putExtra(Run.KEY_ARGS, run.getObjectId());
+                        startActivity(i);
+                    }
+                });
+            }else{
+                holder.edit.setVisibility(View.VISIBLE);
+                holder.map.setVisibility(View.GONE);
+            }
             return convertView;
         }
 
         class ViewHolder {
-            ImageButton edit, delete;
+            ImageButton edit, delete, map;
             TextView date, time, speed, distance;
 
             public ViewHolder(View v) {
+                map = (ImageButton) v.findViewById(R.id.ibMap);
                 edit = (ImageButton) v.findViewById(R.id.ibtnEdit);
                 delete = (ImageButton) v.findViewById(R.id.ibtnDelete);
                 date = (TextView) v.findViewById(R.id.tvDate);

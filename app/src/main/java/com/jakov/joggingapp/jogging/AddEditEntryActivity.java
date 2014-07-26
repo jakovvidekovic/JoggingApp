@@ -41,7 +41,7 @@ public class AddEditEntryActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_entry);
-
+        init();
         edit = getIntent().hasExtra(Run.KEY_ARGS);
         if (edit) {
             findViewById(R.id.btnEntryDelete).setVisibility(View.VISIBLE);
@@ -61,11 +61,13 @@ public class AddEditEntryActivity extends ActionBarActivity {
         } else {
             mRun = new Run();
             mRun.setDeleted(false);
+            mRun.setHasCoordinates(false);
             mRun.setUser(ParseUser.getCurrentUser());
             mRun.setTime(new Date(0));
             mRun.setDate(new Date());
+            tvEntryDate.setText(Const.sdfDate.format(mRun.getDate()));
         }
-        init();
+
     }
 
     private void setInitValues() {

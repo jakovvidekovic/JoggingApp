@@ -15,6 +15,7 @@ public final class Const {
     public static final String PREFS_UPDATE_KEY="com.jakov.joggingapp.update_key";
     public static final String PREFS_STARTED="com.jakov.joggingapp.started_tracking";
     public static final String PREFS_CURRENT_RUN="com.jakov.joggingapp.current_tracking_run";
+    public static final String PREFS_CURRENT_TAB="com.jakov.joggingapp.current_tab";
 
     public static final long UPDATE_INTERVAL=1000*9;
     public static final long FAST_UPDATE_INTERVAL=1000*7;
@@ -22,7 +23,7 @@ public final class Const {
     public static final int NOTIFICATION_ID=5478;
 
 
-    public static final Date getTime(List<Coordinate> coordinates){
+    public static Date getTime(List<Coordinate> coordinates){
         Date dateTime= new Date(0);
         if(coordinates.size()>1){
             Date startTime=coordinates.get(0).getTime();
@@ -31,7 +32,7 @@ public final class Const {
         }
         return dateTime;
     }
-    public static final double getDistance(List<Coordinate> coordinates) {
+    public static double getDistance(List<Coordinate> coordinates) {
         double distance = 0;
         if (coordinates.size() > 1)
             for (int i=1;i<coordinates.size();i++) {
@@ -42,7 +43,10 @@ public final class Const {
         return distance;
     }
 
-    public static final double getAverageSpeed(double distance,Date time){
+    public static double getAverageSpeed(double distance,Date time){
+        if(distance==0){
+            return 0;
+        }
         double hours = (double) time.getTime() / (1000 * 60 * 60);
         return distance / hours;
     }

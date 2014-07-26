@@ -1,7 +1,6 @@
 package com.jakov.joggingapp.extra;
 
 
-import com.parse.ParseACL;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -17,6 +16,7 @@ public class Run extends ParseObject implements Serializable {
     public static final String C_USER="user";
     public static final String C_UPDATED_AT="updateAt";
     public static final String C_DELETED="deleted";
+    public static final String C_HAS_COORDINATES="coordinates";
     public static final String TABLE_NAME="Run";
     public static final String KEY_ARGS="com.jakov.joggingapp.run";
 
@@ -49,6 +49,8 @@ public class Run extends ParseObject implements Serializable {
     public ParseUser getUser(){
         return getParseUser(C_USER);
     }
+    public void setHasCoordinates(boolean hasCoordinates){put(C_HAS_COORDINATES,hasCoordinates);}
+    public boolean hasCoordinates(){return getBoolean(C_HAS_COORDINATES);}
 
     public Run(double distance,Date date, Date time,ParseUser user){
         put(C_DISTANCE,distance);
